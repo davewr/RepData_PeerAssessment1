@@ -30,6 +30,15 @@ yy$month <- month(yy$date1)
 yy$day <- day(yy$date1)
 
 yy$DOY <- strftime(yy$date1, format = "%j")
+yy$weekdays <- weekdays(yy$date1)
+yy$dow <- wday(yy$date1)
+# junk$nm[junk$nm == "B"] <- "b"
+# df$Items[with(df, Store.Type == "A" | Store.Type == "C")] <- 0L
+
+yy$daytype[with(yy, dow > 1 & dow <7)] <- "weekday" 
+yy$daytype[with(yy, dow == 1 | dow ==7)] <- "weekend" 
+
+yy[yy$dow==2,]
 
 group = factor(unique(g1$dt.DOY))
 g1 <- data.frame(group=group,dt=yy)
@@ -55,7 +64,7 @@ ggp1 <- ggplot(spit, aes(x=group, y=spm)) +
     theme(axis.text.x = element_text(angle=60, hjust=1))+
     ylab("Mean Steps per 5min Period") +
     xlab("5 min Group interval") +
-    scale_x_discrete(breaks=seq(0, 2355, 60))
+    scale_x_discrete(breaks=seq(0, 2355, 30))
 
 ggp1
 
