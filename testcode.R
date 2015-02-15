@@ -1,5 +1,7 @@
 # PeerAssess1
 # Smartphones
+setwd("J:/coursera/DataScience/RepResearch/RepData_PeerAssessment1")
+getwd()
 library("lubridate")
 library(dplyr)
 
