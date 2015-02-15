@@ -155,6 +155,11 @@ spitcm <- summarise(group_by(hg2cm, group), spm = mean(steps))
 
 cmaverageStepsPerDay <- round(mean(spdtcm$spd),0)
 cmmedianStepsPerDay <- round(median(spdtcm$spd),0)
+
+# Determine row with max average steps
+cmMax <- max(spitcm$spm)
+cmMaxRow <- spitcm[spitcm$spm >= cmMax,]
+cmmr <- tpMaxRow[1,1]
 ```
 
 The histogram for the steps per day foloows:
@@ -170,13 +175,60 @@ The following barchart shows the mean od steps per time interval -- which also c
 
 
 ```r
-barplot(spit$spm, names=spitcm$group, main ="Mean of Steps per 5 min. interval",
+barplot(spitcm$spm, names=spitcm$group, main ="Mean of Steps per 5 min. interval",
         xlab = "5 min Time Interval", ylab= "Mean Step Frequency")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
+The effects of infill can be seen in that the early morning hours have been infilled. It seems implausible...
+
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+The following charts illustrate the difference between weekend activity and week day acitivty.
+
+First the code which creates the two datasets for week day and week end:
+
+
+```r
+cmMax <- max(spitcm$spm)
+cmMaxRow <- spitcm[spitcm$spm >= cmMax,]
+cmmr <- tpMaxRow[1,1]
+
+we <- cm[hg2cm$daytype == "weekend",]
+wd <- cm[hg2cm$daytype == "weekday",]
+
+wegroup = factor(unique(we$interval))
+wecm <- data.frame(group=wegroup, we)
+
+wdgroup = factor(unique(wd$interval))
+wdcm <- data.frame(group=wdgroup, wd)
+
+spitwe <- summarise(group_by(wecm, group), spm = mean(steps))
+spitwd <- summarise(group_by(wdcm, group), spm = mean(steps))
+```
+A comparison of weekdays and weekends is presented here:
+
+
+```r
+par(mfrow = c(1,2))
+plot(spitwe$spm,  main ="Mean of Steps - WeekEnds",
+        xlab = "5 min Time Interval", ylab= "Mean Step Frequency", type="l")
+
+plot(spitwd$spm,  main ="Mean of Steps - WeekDays",
+        xlab = "5 min Time Interval", ylab= "Mean Step Frequency",
+     type = "l")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+```r
+par(mfrow=c(1,1))
+```
+
+
+Thesre is a clear difference in the charts showing a more active weekend than weekdays.
+
