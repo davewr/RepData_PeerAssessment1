@@ -3,6 +3,10 @@
 
 ## Loading and preprocessing the data
 
+The complete set of code for processing and preparing the data for analysis -- exclusive of any code for graphs -- follows.
+
+
+
 ```r
 library("lubridate")
 library(dplyr)
@@ -62,6 +66,22 @@ medianStepsPerDay <- round(median(spdt$spd),0)
 tpMax <- max(spit$spm)
 tpMaxRow <- spit[spit$spm >= tpMax,]
 tpmr <- tpMaxRow[1,1]
+
+# merge myIncomplete and spit (which contains means based on interval)
+# The merge and cobersion to "integer" works well enoough for this purpose
+merged <- merge(myIncomplete, spit, by.x="interval", by.y="group", 
+                all=F)
+merged$spm <- round(merged$spm, 0)
+merged$steps  <- merged$spm
+merged <- merged[,-7]
+
+completeMerged <- rbind(completeActivity, merged)
+
+# dd[with(dd, order(-z, b)), ]
+
+newMerge <- completeMerged[with(completeMerged, order(date,interval)),]
+
+incomplete <- nrow(myIncomplete)
 ```
 
 
@@ -97,6 +117,65 @@ barplot(spit$spm, names=spit$group, main ="Mean of Steps per 5 min. interval",
 The five minute interval that typically has the greatest step activity is at 835.
 
 ## Imputing missing values
+
+When the data set was split into a "complete" data set and one with missing values there were 2304 rows with missing step data.
+
+```r
+# Imputing Values calculation
+# ***************************
+# merge myIncomplete and spit (which contains means based on interval)
+# The merge and cobersion to "integer" works well enoough for this purpose
+merged <- merge(myIncomplete, spit, by.x="interval", by.y="group", 
+                all=F)
+merged$spm <- round(merged$spm, 0)
+merged$steps  <- merged$spm
+merged <- merged[,-7]
+
+# Bind the Complete and Imcomplet tables
+completeMerged <- rbind(completeActivity, merged)
+# Sort the data
+newMerge <- completeMerged[with(completeMerged, order(date,interval)),]
+
+incomplete <- nrow(myIncomplete)
+
+# shorten "completeActivity" name for convenience
+cm <- completeMerged
+g1m <- cm
+# create factors for summary calculations , by day and by time interval
+groupcm <- factor(unique(cm$DOY))
+g1m <- data.frame(group=groupcm,cm)
+
+hmgroupm = factor(unique(cm$interval))
+hg2cm <- data.frame(group=hmgroupm, cm)
+
+#summary for steps per day
+spdtcm <- summarise(group_by(g1m, group), spd = sum(steps))
+#summary for average steps by interval
+spitcm <- summarise(group_by(hg2cm, group), spm = mean(steps))
+
+cmaverageStepsPerDay <- round(mean(spdtcm$spd),0)
+cmmedianStepsPerDay <- round(median(spdtcm$spd),0)
+```
+
+The histogram for the steps per day foloows:
+
+
+```r
+histinfo <- hist(spdtcm$spd, main = "Histogram of Steps per day --with Imputed Data",  xlab="Steps per Day", breaks=10)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+The following barchart shows the mean od steps per time interval -- which also can be compared to the chart in the previous section.
+
+
+```r
+barplot(spit$spm, names=spitcm$group, main ="Mean of Steps per 5 min. interval",
+        xlab = "5 min Time Interval", ylab= "Mean Step Frequency")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+
 
 
 

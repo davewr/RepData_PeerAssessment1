@@ -48,6 +48,8 @@ tpMax <- max(spit$spm)
 tpMaxRow <- spit[spit$spm >= tpMax,]
 tpmr <- tpMaxRow[1,1]
 
+# Imputing Values calculation
+# ***************************
 # merge myIncomplete and spit (which contains means based on interval)
 # The merge and cobersion to "integer" works well enoough for this purpose
 merged <- merge(myIncomplete, spit, by.x="interval", by.y="group", 
@@ -56,10 +58,40 @@ merged$spm <- round(merged$spm, 0)
 merged$steps  <- merged$spm
 merged <- merged[,-7]
 
+# Bind the Complete and Imcomplet tables
 completeMerged <- rbind(completeActivity, merged)
-
-# dd[with(dd, order(-z, b)), ]
-
+# Sort the data
 newMerge <- completeMerged[with(completeMerged, order(date,interval)),]
 
 incomplete <- nrow(myIncomplete)
+
+# shorten "completeActivity" name for convenience
+cm <- completeMerged
+
+g1m <- cm
+
+groupcm <- factor(unique(cm$DOY))
+g1m <- data.frame(group=groupcm,cm)
+
+hmgroupm = factor(unique(cm$interval))
+hg2cm <- data.frame(group=hmgroupm, cm)
+
+spdtcm <- summarise(group_by(g1m, group), spd = sum(steps))
+
+spitcm <- summarise(group_by(hg2cm, group), spm = mean(steps))
+
+cmaverageStepsPerDay <- round(mean(spdtcm$spd),0)
+cmmedianStepsPerDay <- round(median(spdtcm$spd),0)
+
+
+histinfo <- hist(spdtcm$spd, main = "Histogram of Steps per day", 
+                 xlab="Steps per Day", breaks=10)
+
+barplot(spit$spm, names=spitcm$group, main ="Mean of Steps per 5 min. interval",
+        xlab = "5 min Time Interval", ylab= "Mean Step Frequency")
+# Prefer this barplot
+
+cmMax <- max(spitcm$spm)
+cmMaxRow <- spitcm[spitcm$spm >= cmMax,]
+cmmr <- tpMaxRow[1,1]
+
