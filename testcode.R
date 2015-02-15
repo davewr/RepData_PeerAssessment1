@@ -6,7 +6,7 @@ library(dplyr)
 activity <- read.csv("J:/coursera/DataScience/RepResearch/RepData_PeerAssessment1/activity.csv",
          stringsAsFactors=FALSE)
 
-missedSteps <- is.na(activity.steps) 
+# missedSteps <- is.na(activity$steps) 
 
 myIncomplete <- activity[!complete.cases(activity),]
 completeActivity <- activity[complete.cases(activity),]
@@ -14,45 +14,55 @@ completeActivity <- activity[complete.cases(activity),]
 tail(completeActivity)
 head(completeActivity)
 
-ndate1 <- as.Date(completeActivity$date, "%Y-%m-%d")
-class(ndate1)
+activity <- read.csv("J:/coursera/DataScience/RepResearch/RepData_PeerAssessment1/activity.csv",
+                     stringsAsFactors=FALSE)
 
-zz <- data.frame(as.Date(completeActivity$date, "%Y-%m-%d"))
-xx <- data.frame(ymd(completeActivity$date))
+activity$date <- as.Date(activity$date, "%Y-%m-%d")
+activity$dow <- wday(activity$date)
+activity$DOY <- strftime(activity$date, format = "%j")
 
-yy <- cbind(completeActivity, zz)
-head(yy)
-tail(yy)
+activity$daytype[with(activity, dow > 1 & dow <7)] <- "weekday" 
+activity$daytype[with(activity, dow == 1 | dow ==7)] <- "weekend" 
 
-colnames(yy)[4] <- 'date1'
 
-yy$month <- month(yy$date1)
-yy$day <- day(yy$date1)
+myIncomplete <- activity[!complete.cases(activity),]
+completeActivity <- activity[complete.cases(activity),]
 
-yy$DOY <- strftime(yy$date1, format = "%j")
-yy$weekdays <- weekdays(yy$date1)
-yy$dow <- wday(yy$date1)
+#yy <- completeActivity
+
+
+#yy$month <- month(yy$date1)
+#yy$day <- day(yy$date1)
+
+#yy$DOY <- strftime(yy$date1, format = "%j")
+#yy$weekdays <- weekdays(yy$date1)
+#yy$dow <- wday(yy$date1)
 # junk$nm[junk$nm == "B"] <- "b"
 # df$Items[with(df, Store.Type == "A" | Store.Type == "C")] <- 0L
 
-yy$daytype[with(yy, dow > 1 & dow <7)] <- "weekday" 
-yy$daytype[with(yy, dow == 1 | dow ==7)] <- "weekend" 
+#yy$daytype[with(yy, dow > 1 & dow <7)] <- "weekday" 
+#yy$daytype[with(yy, dow == 1 | dow ==7)] <- "weekend" 
 
-yy[yy$dow==2,]
+#yy[yy$dow==2,]
+ca <- completeActivity
+rm(g1)
+g1 <- ca
+group <- factor(unique(ca$DOY))
+g1 <- data.frame(group=group,ca)
 
-group = factor(unique(g1$dt.DOY))
-g1 <- data.frame(group=group,dt=yy)
-
-hmgroup = factor(unique(g1$dt.interval))
-hg2 <- data.frame(group=hmgroup, dt=yy)
+hmgroup = factor(unique(ca$interval))
+hg2 <- data.frame(group=hmgroup, ca)
 
 #agg1 <- aggregate(g1$dt.steps, by=g1$group, FUN=sum)
 #agg2 <- aggregate(g1$dt.steps, by=hg2$group, FUN=mean)
 
-spdt <- summarise(group_by(g1, group), spd = sum(dt.steps))
+spdt <- summarise(group_by(g1, group), spd = sum(steps))
+averageStepsPerDay <- round(mean(spdt$spd),0)
+
 hist(spdt$spd, main = "Histogram of Steps per day", xlab="Steps per Day")
 
-spit <- summarise(group_by(hg2, group), spm = mean(dt.steps))
+
+spit <- summarise(group_by(hg2, group), spm = mean(steps))
 barplot(spit$spm, names=spit$group, main ="Mean of Steps per 5 min. interval",
         xlab = "5 min Time Interval", ylab= "Mean STep Frequency")
 # Prefer this barplot
@@ -76,9 +86,22 @@ plot(ggp1)
 
 
 max(spit$spm)
+mean(spit$spm)
 spit[spit$spm>206,]
 
 
 max(activity$interval)
 
+# merge myIncomplete and spit (which contains means based on interval)
+# The merge and cobersion to "integer" works well enoough for this purpose
+merged <- merge(myIncomplete, spit, by.x="interval", by.y="group", 
+                all=F)
+merged$spm <- round(merged$spm, 0)
+merged$steps  <- merged$spm
+merged <- merged[,-4]
 
+completeMerged <- rbind(completeActivity, merged)
+
+# dd[with(dd, order(-z, b)), ]
+
+newMerge <- completeMerged[with(completeMerged, order(date,interval)),]
