@@ -85,10 +85,9 @@ ggp1
 plot(ggp1)
 
 
-max(spit$spm)
-mean(spit$spm)
-spit[spit$spm>206,]
-
+tpMax <- max(spit$spm)
+tpMaxRow <- spit[spit$spm >= tpMax,]
+tpmr <- tpMaxRow[1,1]
 
 max(activity$interval)
 

@@ -59,14 +59,15 @@ spit <- summarise(group_by(hg2, group), spm = mean(steps))
 averageStepsPerDay <- round(mean(spdt$spd),0)
 medianStepsPerDay <- round(median(spdt$spd),0)
 
-#hist(spdt$spd, main = "Histogram of Steps per day", xlab="Steps per Day", breaks=15)
-#histinfo
+tpMax <- max(spit$spm)
+tpMaxRow <- spit[spit$spm >= tpMax,]
+tpmr <- tpMaxRow[1,1]
 ```
 
 
 #Summaries
 
-## What is mean total number of steps taken per day?
+## What is the mean of the total number of steps taken per day?
 
 The average steps taken per day is 1.0766\times 10^{4}.
 
@@ -82,8 +83,18 @@ histinfo <- hist(spdt$spd, main = "Histogram of Steps per day", xlab="Steps per 
 
 ## What is the average daily activity pattern?
 
-put the bar chart here...
+The average daily activity pattern  can be viewed in the following graph.
 
+
+
+```r
+barplot(spit$spm, names=spit$group, main ="Mean of Steps per 5 min. interval",
+        xlab = "5 min Time Interval", ylab= "Mean Step Frequency")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+The five minute interval that typpically has the greatest step activity is at 835.
 
 ## Imputing missing values
 

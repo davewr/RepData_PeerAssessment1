@@ -38,8 +38,15 @@ hist(spdt$spd, main = "Histogram of Steps per day", xlab="Steps per Day")
 
 spit <- summarise(group_by(hg2, group), spm = mean(steps))
 barplot(spit$spm, names=spit$group, main ="Mean of Steps per 5 min. interval",
-        xlab = "5 min Time Interval", ylab= "Mean STep Frequency")
+        xlab = "5 min Time Interval", ylab= "Mean Step Frequency")
 # Prefer this barplot
+
+
+
+
+tpMax <- max(spit$spm)
+tpMaxRow <- spit[spit$spm >= tpMax,]
+tpmr <- tpMaxRow[1,1]
 
 
 
