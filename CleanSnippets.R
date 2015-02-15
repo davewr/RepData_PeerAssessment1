@@ -48,5 +48,18 @@ tpMax <- max(spit$spm)
 tpMaxRow <- spit[spit$spm >= tpMax,]
 tpmr <- tpMaxRow[1,1]
 
+# merge myIncomplete and spit (which contains means based on interval)
+# The merge and cobersion to "integer" works well enoough for this purpose
+merged <- merge(myIncomplete, spit, by.x="interval", by.y="group", 
+                all=F)
+merged$spm <- round(merged$spm, 0)
+merged$steps  <- merged$spm
+merged <- merged[,-7]
 
+completeMerged <- rbind(completeActivity, merged)
 
+# dd[with(dd, order(-z, b)), ]
+
+newMerge <- completeMerged[with(completeMerged, order(date,interval)),]
+
+incomplete <- nrow(myIncomplete)

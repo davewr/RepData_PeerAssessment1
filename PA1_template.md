@@ -94,7 +94,7 @@ barplot(spit$spm, names=spit$group, main ="Mean of Steps per 5 min. interval",
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
-The five minute interval that typpically has the greatest step activity is at 835.
+The five minute interval that typically has the greatest step activity is at 835.
 
 ## Imputing missing values
 

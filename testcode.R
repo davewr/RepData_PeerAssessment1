@@ -1,6 +1,7 @@
 # PeerAssess1
 # Smartphones
 setwd("J:/coursera/DataScience/RepResearch/RepData_PeerAssessment1")
+setwd=("~")
 getwd()
 library("lubridate")
 library(dplyr)
@@ -106,3 +107,4 @@ completeMerged <- rbind(completeActivity, merged)
 # dd[with(dd, order(-z, b)), ]
 
 newMerge <- completeMerged[with(completeMerged, order(date,interval)),]
+

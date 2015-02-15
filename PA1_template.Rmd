@@ -76,7 +76,7 @@ barplot(spit$spm, names=spit$group, main ="Mean of Steps per 5 min. interval",
         xlab = "5 min Time Interval", ylab= "Mean Step Frequency")
 ```
 
-The five minute interval that typpically has the greatest step activity is at `r tpmr`.
+The five minute interval that typically has the greatest step activity is at `r tpmr`.
 
 ## Imputing missing values
 
