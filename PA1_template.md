@@ -162,7 +162,7 @@ cmMaxRow <- spitcm[spitcm$spm >= cmMax,]
 cmmr <- tpMaxRow[1,1]
 ```
 
-The histogram for the steps per day foloows:
+The histogram for the steps per day follows:
 
 
 ```r
@@ -181,8 +181,13 @@ barplot(spitcm$spm, names=spitcm$group, main ="Mean of Steps per 5 min. interval
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
-The effects of infill can be seen in that the early morning hours have been infilled. It seems implausible...
+### Summary of effects of data infill -- or Imputing data
 
+The effects of infill can be seen in that the early morning hours have been infilled to make it appear as if there is possibly significant level of activity during early morning hours. It seems implausible to me although reasonable people might disaagree on the point... Without intimate knowledge of the sample set it would be difficult to explain.
+
+The average value of the number of steps is ``1.0766\times 10^{4}`` as compared to 1.0766\times 10^{4} before the data set was infilled.
+
+The median value of the number of steps is ``1.061\times 10^{4}`` as compared to the previous value of 1.0489\times 10^{4}.
 
 
 
@@ -230,5 +235,5 @@ par(mfrow=c(1,1))
 ```
 
 
-Thesre is a clear difference in the charts showing a more active weekend than weekdays.
+There is a clear difference in the charts showing a more active weekend than weekdays.
 

@@ -108,10 +108,17 @@ wdcm <- data.frame(group=wdgroup, wd)
 spitwe <- summarise(group_by(wecm, group), spm = mean(steps))
 spitwd <- summarise(group_by(wdcm, group), spm = mean(steps))
 
-par(mfrow = c(1,2))
-barplot(spitwe$spm, names=spitwe$group, main ="Mean of Steps - WeekEnds",
-        xlab = "5 min Time Interval", ylab= "Mean Step Frequency")
 
-barplot(spitwd$spm, names=spitwd$group, main ="Mean of Steps - WeekDays",
-        xlab = "5 min Time Interval", ylab= "Mean Step Frequency")
+par(mfrow = c(1,2))
+plot(spitwe$spm,  main ="Mean of Steps - WeekEnds",
+     xlab = "5 min Time Interval", ylab= "Mean Step Frequency", type="l")
+
+plot(spitwd$spm,  main ="Mean of Steps - WeekDays",
+     xlab = "5 min Time Interval", ylab= "Mean Step Frequency",
+     type = "l")
+
 par(mfrow=c(1,1))
+
+
+
+    
