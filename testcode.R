@@ -50,12 +50,16 @@ hg2 <- data.frame(group=hmgroup, dt=yy)
 #agg2 <- aggregate(g1$dt.steps, by=hg2$group, FUN=mean)
 
 spdt <- summarise(group_by(g1, group), spd = sum(dt.steps))
-hist(spdt$spd)
+hist(spdt$spd, main = "Histogram of Steps per day", xlab="Steps per Day")
 
 spit <- summarise(group_by(hg2, group), spm = mean(dt.steps))
-barplot(spit$spm, names=spit$group, main ="Steps per 5 min. interval")
+barplot(spit$spm, names=spit$group, main ="Mean of Steps per 5 min. interval",
+        xlab = "5 min Time Interval", ylab= "Mean STep Frequency")
+# Prefer this barplot
 
 # -- or -- 
+
+# Don't like this plot as much as simple barplot...
 library(ggplot2)
 qplot(group,spm, data=spit, geom="bar", stat="identity", main ="Steps per 5 min. interval")
 
@@ -64,20 +68,15 @@ ggp1 <- ggplot(spit, aes(x=group, y=spm)) +
     theme(axis.text.x = element_text(angle=60, hjust=1))+
     ylab("Mean Steps per 5min Period") +
     xlab("5 min Group interval") +
-    scale_x_discrete(breaks=seq(0, 2355, 30))
+    scale_x_discrete(breaks=seq(0, 2355, 30)) 
 
 ggp1
-
-ggp1 
-    
-
+# -- or --
 plot(ggp1)
 
 
 max(spit$spm)
 spit[spit$spm>206,]
-
-       #main ="Steps per 5 min. interval")
 
 
 max(activity$interval)
